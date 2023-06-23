@@ -1,28 +1,52 @@
 #include "Eigen/Geometry"
+#include <array>
 
 class SmoothTrajectory
 {
 public:
-    SmoothTrajectory(const double tInitial, const double tFinal,
-                     const Eigen::Affine3d TInitial, const Eigen::Affine3d TFinal);
-    SmoothTrajectory(const double tInitial, const double tFinal,
-                     const Eigen::Affine3d TInitial, const Eigen::Affine3d TFinal,
-                     const int polyOrder);
+    SmoothTrajectory(const double tStart, const double tEnd,
+                     const double pStart, const double pEnd);
     ~SmoothTrajectory();
 
-    double screwTrajectory(const double t);
+    /**
+     * @brief Calculate the position on the desired straight trajectory for a given time
+     * @param t Time [s]
+     * @return Point on the trajectory
+    */
+    double jointTrajectoryPos(const double t);
+    
+    /**
+     * @brief Calculate a velocity on the desired straight trajectory for a given time
+     * @param t Time [s]
+     * @return Velocity on the trajectory
+    */
+    double jointTrajectoryVel(const double t);
 
-    double m_polyCoeffs[5] = {0.0};
+    
 
 private:
     int m_polyOrder;
-    Eigen::Affine3d m_TInitial;
-    Eigen::Affine3d m_TFinal;
-    double m_tInitial;
-    double m_tFinal;
+    double m_pStart;
+    double m_pEnd;
+    double m_tStart;
+    double m_tEnd;
+    Eigen::Vector4d m_polyCoeffs;
 
-    void linearSmoothingPolynomial(Eigen::Vector2d& coeffs);
-    void cubicSmoothingPolynomial(Eigen::Vector4d& coeffs);
-    void quinticSmoothingPolynomial(Eigen::Vector<double, 6>& coeffs);
+    /**
+     * @brief Calculate the 3rd order polynomial
+     * @return Polynomial coefficients in increasing order
+    */
+    void cubicSmoothingPolynomial();
+
+    /**
+     * @brief Evaluate the smooting polynomial
+     * @param t Time [s]
+     * @return Value of the smooting polynomial at time t
+    */
     double smoothingPolynomial(const double t);
+    double smoothingPolynomialDerivative(const double t);
+
+
+    //void linearSmoothingPolynomial(Eigen::Vector2d& coeffs);
+    //void quinticSmoothingPolynomial(Eigen::Vector<double, 6>& coeffs);
 };
