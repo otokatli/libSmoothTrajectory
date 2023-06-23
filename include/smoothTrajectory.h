@@ -1,8 +1,8 @@
 #ifndef SMOOTH_TRAJECTORY_H_
 #define SMOOTH_TRAJECTORY_H_
 
-#include "Eigen/Geometry"
-#include <array>
+#include "Eigen/Dense"
+
 
 class SmoothTrajectory
 {
