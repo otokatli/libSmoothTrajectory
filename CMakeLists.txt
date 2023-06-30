@@ -80,13 +80,13 @@ else()
 	set(ENV{EIGEN3_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/external/eigen)
 endif()
 
-add_library(SmoothTrajectoryLib STATIC src/smoothTrajectory.cpp include/smoothTrajectory.h)
+add_library(SmoothTrajectory STATIC src/smoothTrajectory.cpp include/smoothTrajectory.h)
 
-target_include_directories(SmoothTrajectoryLib PUBLIC include)
-target_include_directories(SmoothTrajectoryLib PUBLIC $ENV{EIGEN3_INCLUDE_DIR})
+target_include_directories(SmoothTrajectory PUBLIC include)
+target_include_directories(SmoothTrajectory PUBLIC $ENV{EIGEN3_INCLUDE_DIR})
 
-target_compile_definitions(SmoothTrajectoryLib PUBLIC cxx_std_17)
+target_compile_definitions(SmoothTrajectory PUBLIC cxx_std_17)
 
 add_executable(trajectory test/trajectory.cpp)
 
-target_link_libraries(trajectory PUBLIC SmoothTrajectoryLib)
+target_link_libraries(trajectory PUBLIC SmoothTrajectory)
