@@ -8,7 +8,7 @@ class SmoothTrajectory
 {
 public:
     SmoothTrajectory(const double tStart, const double tEnd,
-                     const double pStart, const double pEnd);
+                     const Eigen::VectorXd pStart, const Eigen::VectorXd pEnd);
     ~SmoothTrajectory();
 
     /**
@@ -19,7 +19,7 @@ public:
      * @see K. M. Lynch and F. C. Park, "Modern Robotics: Mechanics, Planning and
      *      Control," Cambridge University Press, 2017.
     */
-    double jointTrajectoryPos(const double t);
+    Eigen::VectorXd jointTrajectoryPos(const double t);
     
     /**
      * Calculate the velocity value on the trajectory for a given time
@@ -29,22 +29,19 @@ public:
      * @see K. M. Lynch and F. C. Park, "Modern Robotics: Mechanics, Planning and
      *      Control," Cambridge University Press, 2017.
     */
-    double jointTrajectoryVel(const double t);
+    Eigen::VectorXd jointTrajectoryVel(const double t);
 
     
 
 private:
-    // Order of the smoothing polynomial, only cubic polynomial is implemented
-    int m_polyOrder;
-
     // Coefficients of the smooting polynomial
     Eigen::Vector4d m_polyCoeffs;
 
     // Start position of the trajectory
-    double m_pStart;
+    Eigen::VectorXd m_pStart;
 
     // End position of the trajectory
-    double m_pEnd;
+    Eigen::VectorXd m_pEnd;
 
     // Start time of the trajectory
     double m_tStart;

@@ -2,9 +2,10 @@
 #include <iostream>
 
 SmoothTrajectory::SmoothTrajectory(const double tStart, const double tEnd,
-                                   const double pStart, const double pEnd) :
-                                   m_polyOrder{3}, m_pStart{pStart}, m_pEnd{pEnd},
-                                   m_tStart{tStart}, m_tEnd{tEnd}
+                                   const Eigen::VectorXd pStart, const Eigen::VectorXd pEnd) :
+                                   m_pStart{pStart}, m_pEnd{pEnd},
+                                   m_tStart{tStart}, m_tEnd{tEnd},
+                                   m_polyCoeffs{Eigen::Vector4d::Zero()}
 {
     // Calculate the smooting polynomial coefficients
     cubicSmoothingPolynomial();
@@ -14,12 +15,12 @@ SmoothTrajectory::~SmoothTrajectory()
 {
 }
 
-double SmoothTrajectory::jointTrajectoryPos(const double t)
+Eigen::VectorXd SmoothTrajectory::jointTrajectoryPos(const double t)
 {
     return m_pStart + smoothingPolynomial(t) * (m_pEnd - m_pStart);
 }
 
-double SmoothTrajectory::jointTrajectoryVel(const double t)
+Eigen::VectorXd SmoothTrajectory::jointTrajectoryVel(const double t)
 {
     return smoothingPolynomialDerivative(t) * (m_pEnd - m_pStart);
 }
@@ -40,12 +41,7 @@ void SmoothTrajectory::cubicSmoothingPolynomial()
 
 double SmoothTrajectory::smoothingPolynomial(const double t)
 {
-    double smoothingPolyVal = 0.0;
-
-    for (int order = 0; order < 4; ++order)
-        smoothingPolyVal += m_polyCoeffs(order) * std::pow(t, order);
-    
-    return smoothingPolyVal;
+    return m_polyCoeffs(0) + m_polyCoeffs(1) * t + m_polyCoeffs(2) * std::pow(t, 2) + m_polyCoeffs(3) * std::pow(t, 3);
 }
 
 double SmoothTrajectory::smoothingPolynomialDerivative(const double t)
