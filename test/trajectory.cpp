@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "smoothTrajectory.h"
+#include "Eigen/Dense"
 
 
 typedef std::chrono::high_resolution_clock Clock;
@@ -19,7 +20,7 @@ void writeContainerToFile(const Container& container, const std::string& filenam
         return;
     }
 
-    std::ostream_iterator<double> outputIterator(outputFile, "\n");
+    std::ostream_iterator<Eigen::Vector3d> outputIterator(outputFile, "\n");
     std::copy(container.begin(), container.end(), outputIterator);
 
     outputFile.close();
@@ -32,8 +33,8 @@ int main()
 
     const double tStart{ 0.0 };
     const double tEnd{ 10.0 };
-    const double pStart{ 0.0 };
-    const double pEnd{ 2.0 };
+    const Eigen::Vector3d pStart{ 0.0, 0.0, 0.0 };
+    const Eigen::Vector3d pEnd{ 1.0, 2.0, 3.0 };
     
     // Duration of the loop
     const std::chrono::duration<long, std::nano> tDuration{ static_cast<long>((tEnd-tStart)*1e9) };
@@ -47,8 +48,8 @@ int main()
     SmoothTrajectory tr(tStart, tEnd, pStart, pEnd);
 
     // Calculated trajectory and time
-    std::list<double> xd;
-    std::list<double> xpd;
+    std::list<Eigen::Vector3d> xd;
+    std::list<Eigen::Vector3d> xpd;
     std::list<double> time;
     
     // Current timestamp
@@ -85,8 +86,8 @@ int main()
     }
 
     // Save data to file
-    writeContainerToFile(time, "time.csv");
-    writeContainerToFile(xd, "desiredPosition.csv");
+    //writeContainerToFile(time, "time.csv");
+    //writeContainerToFile(xd, "desiredPosition.csv");
 
     return 0;
 }
