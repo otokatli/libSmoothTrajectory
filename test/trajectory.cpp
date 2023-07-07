@@ -31,26 +31,26 @@ int main()
 {
     std::cout << "Testing smooth trajectory library" << std::endl;
 
-    const double tStart{ 0.0 };
-    const double tEnd{ 10.0 };
-    const Eigen::Vector3d pStart{ 0.0, 0.0, 0.0 };
-    const Eigen::Vector3d pEnd{ 1.0, 2.0, 3.0 };
+    const float tStart{ 0.0f };
+    const float tEnd{ 10.0f };
+    const Eigen::Vector3f pStart{ 0.0, 0.0, 0.0 };
+    const Eigen::Vector3f pEnd{ 1.0, 2.0, 3.0 };
     
     // Duration of the loop
-    const std::chrono::duration<long, std::nano> tDuration{ static_cast<long>((tEnd-tStart)*1e9) };
+    const std::chrono::duration<long long, std::nano> tDuration{ static_cast<long long>((tEnd-tStart)*1e9) };
 
     // Sampling time of the loop
-    const std::chrono::duration<long, std::nano> h{ 100000000 };
+    const std::chrono::duration<long long, std::nano> h{ 100000000 };
 
     // Elapsed time from the beginning of the loop
-    std::chrono::duration<long, std::nano> tElapsed{ 0 };
+    std::chrono::duration<long long, std::nano> tElapsed{ 0 };
 
-    SmoothTrajectory tr(tStart, tEnd, pStart, pEnd);
+    SmoothTrajectory<float> tr(tStart, tEnd, pStart, pEnd);
 
     // Calculated trajectory and time
-    std::list<Eigen::Vector3d> xd;
-    std::list<Eigen::Vector3d> xpd;
-    std::list<double> time;
+    std::list<Eigen::Vector3f> xd;
+    std::list<Eigen::Vector3f> xpd;
+    std::list<float> time;
     
     // Current timestamp
     auto t = Clock::now();
@@ -73,9 +73,9 @@ int main()
         // Calculate the elapsed time from the loop start
         tElapsed = tIterationStart-tLoopStart;
 
-        xd.push_back(tr.jointTrajectoryPos(tElapsed.count()*1e-9));
-        xpd.push_back(tr.jointTrajectoryVel(tElapsed.count()*1e-9));
-        time.push_back(tElapsed.count()*1e-9);
+        xd.push_back(tr.jointTrajectoryPos(tElapsed.count()*1e-9f));
+        xpd.push_back(tr.jointTrajectoryVel(tElapsed.count()*1e-9f));
+        time.push_back(tElapsed.count()*1e-9f);
 
         // Hold the iteratation for hFastLoop seconds in total
         while (t - tIterationStart < h)

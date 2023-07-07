@@ -1,34 +1,43 @@
 #include "smoothTrajectory.h"
 #include <iostream>
 
-SmoothTrajectory::SmoothTrajectory(const double tStart, const double tEnd,
-                                   const Eigen::VectorXd pStart, const Eigen::VectorXd pEnd) :
+
+template class SmoothTrajectory<float>;
+
+template<class T>
+SmoothTrajectory<T>::SmoothTrajectory(const T tStart, const T tEnd,
+    const Eigen::Vector<T, Eigen::Dynamic> pStart, const Eigen::Vector<T, Eigen::Dynamic> pEnd) :
                                    m_pStart{pStart}, m_pEnd{pEnd},
                                    m_tStart{tStart}, m_tEnd{tEnd},
-                                   m_polyCoeffs{Eigen::Vector4d::Zero()}
+                                   m_polyCoeffs{Eigen::Vector<T, 4>::Zero()}
 {
     // Calculate the smooting polynomial coefficients
     cubicSmoothingPolynomial();
 }
 
-SmoothTrajectory::~SmoothTrajectory()
+
+template<class T>
+SmoothTrajectory<T>::~SmoothTrajectory()
 {
 }
 
-Eigen::VectorXd SmoothTrajectory::jointTrajectoryPos(const double t)
+template<class T>
+Eigen::Vector<T, Eigen::Dynamic> SmoothTrajectory<T>::jointTrajectoryPos(const T t)
 {
     return m_pStart + smoothingPolynomial(t) * (m_pEnd - m_pStart);
 }
 
-Eigen::VectorXd SmoothTrajectory::jointTrajectoryVel(const double t)
+template<class T>
+Eigen::Vector<T, Eigen::Dynamic> SmoothTrajectory<T>::jointTrajectoryVel(const T t)
 {
     return smoothingPolynomialDerivative(t) * (m_pEnd - m_pStart);
 }
 
-void SmoothTrajectory::cubicSmoothingPolynomial()
+template<class T>
+void SmoothTrajectory<T>::cubicSmoothingPolynomial()
 {
-    Eigen::Matrix4d A;
-    Eigen::Vector4d b;
+    Eigen::Matrix<T, 4, 4> A;
+    Eigen::Vector<T, 4> b;
 
     A << 1.0, m_tStart, std::pow(m_tStart, 2), std::pow(m_tStart, 3),
          0.0, 1.0, 2.0 * m_tStart, 3.0 * std::pow(m_tStart, 2),
@@ -39,12 +48,14 @@ void SmoothTrajectory::cubicSmoothingPolynomial()
     m_polyCoeffs = A.inverse() * b;
 }
 
-double SmoothTrajectory::smoothingPolynomial(const double t)
+template<class T>
+T SmoothTrajectory<T>::smoothingPolynomial(const T t)
 {
     return m_polyCoeffs(0) + m_polyCoeffs(1) * t + m_polyCoeffs(2) * std::pow(t, 2) + m_polyCoeffs(3) * std::pow(t, 3);
 }
 
-double SmoothTrajectory::smoothingPolynomialDerivative(const double t)
+template<class T>
+T SmoothTrajectory<T>::smoothingPolynomialDerivative(const T t)
 {    
     return m_polyCoeffs(1) + 2*m_polyCoeffs(2)*t + 3*m_polyCoeffs(3)*std::pow(t, 2);
 }
