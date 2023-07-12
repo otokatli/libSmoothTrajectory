@@ -7,10 +7,10 @@
 
 #include "smoothTrajectory.h"
 #include "Eigen/Dense"
+#include <cmath>
 
 
 typedef std::chrono::high_resolution_clock Clock;
-
 
 template <typename Container>
 void writeContainerToFile(const Container& container, const std::string& filename) {
