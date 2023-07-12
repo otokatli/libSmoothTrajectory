@@ -4,12 +4,11 @@
 #include "Eigen/Dense"
 
 
-template<class T>
 class SmoothTrajectory
 {
 public:
-    SmoothTrajectory(const T tStart, const T tEnd,
-                     const Eigen::Vector<T, Eigen::Dynamic> pStart, const Eigen::Vector<T, Eigen::Dynamic> pEnd);
+    SmoothTrajectory(const double tStart, const double tEnd,
+                     const Eigen::VectorXd pStart, const Eigen::VectorXd pEnd);
     ~SmoothTrajectory();
 
     /**
@@ -20,7 +19,7 @@ public:
      * @see K. M. Lynch and F. C. Park, "Modern Robotics: Mechanics, Planning and
      *      Control," Cambridge University Press, 2017.
     */
-    Eigen::Vector<T, Eigen::Dynamic> jointTrajectoryPos(const T t);
+    Eigen::VectorXd jointTrajectoryPos(const double t);
     
     /**
      * Calculate the velocity value on the trajectory for a given time
@@ -30,25 +29,25 @@ public:
      * @see K. M. Lynch and F. C. Park, "Modern Robotics: Mechanics, Planning and
      *      Control," Cambridge University Press, 2017.
     */
-    Eigen::Vector<T, Eigen::Dynamic> jointTrajectoryVel(const T t);
+    Eigen::VectorXd jointTrajectoryVel(const double t);
 
     
 
 private:
     // Coefficients of the smooting polynomial
-    Eigen::Vector<T, 4> m_polyCoeffs;
+    Eigen::Vector4d m_polyCoeffs;
 
     // Start position of the trajectory
-    Eigen::Vector<T, Eigen::Dynamic> m_pStart;
+    Eigen::VectorXd m_pStart;
 
     // End position of the trajectory
-    Eigen::Vector<T, Eigen::Dynamic > m_pEnd;
+    Eigen::VectorXd m_pEnd;
 
     // Start time of the trajectory
-    T m_tStart;
+    double m_tStart;
 
     // End time of the trajectory
-    T m_tEnd;
+    double m_tEnd;
 
     /**
      * Calculate the coefficients of the third order smoothing polynomial used to
@@ -73,7 +72,7 @@ private:
      * @see K. M. Lynch and F. C. Park, "Modern Robotics: Mechanics, Planning and
      *      Control," Cambridge University Press, 2017.
     */
-    T smoothingPolynomial(const T t);
+    double smoothingPolynomial(const double t);
 
     /**
      * Calculate the derivative of the smoothing polynomial for a given time t
@@ -83,7 +82,7 @@ private:
      * @see K. M. Lynch and F. C. Park, "Modern Robotics: Mechanics, Planning and
      *      Control," Cambridge University Press, 2017.
     */
-    T smoothingPolynomialDerivative(const T t);
+    double smoothingPolynomialDerivative(const double t);
 };
 
 #endif // SMOOTH_TRAJECTORY_H_

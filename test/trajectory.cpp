@@ -31,10 +31,10 @@ int main()
 {
     std::cout << "Testing smooth trajectory library" << std::endl;
 
-    const float tStart{ 0.0f };
-    const float tEnd{ 10.0f };
-    const Eigen::Vector3f pStart{ 0.0, 0.0, 0.0 };
-    const Eigen::Vector3f pEnd{ 1.0, 2.0, 3.0 };
+    const double tStart{ 0.0f };
+    const double tEnd{ 10.0f };
+    const Eigen::Vector3d pStart{ 0.0, 0.0, 0.0 };
+    const Eigen::Vector3d pEnd{ 1.0, 2.0, 3.0 };
     
     // Duration of the loop
     const std::chrono::duration<long long, std::nano> tDuration{ static_cast<long long>((tEnd-tStart)*1e9) };
@@ -45,12 +45,12 @@ int main()
     // Elapsed time from the beginning of the loop
     std::chrono::duration<long long, std::nano> tElapsed{ 0 };
 
-    SmoothTrajectory<float> tr(tStart, tEnd, pStart, pEnd);
+    SmoothTrajectory tr(tStart, tEnd, pStart, pEnd);
 
     // Calculated trajectory and time
-    std::list<Eigen::Vector3f> xd;
-    std::list<Eigen::Vector3f> xpd;
-    std::list<float> time;
+    std::list<Eigen::Vector3d> xd;
+    std::list<Eigen::Vector3d> xpd;
+    std::list<double> time;
     
     // Current timestamp
     auto t = Clock::now();
