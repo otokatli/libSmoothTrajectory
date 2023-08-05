@@ -2,6 +2,10 @@
 #include <iostream>
 
 
+SmoothTrajectory::SmoothTrajectory()
+{
+}
+
 SmoothTrajectory::SmoothTrajectory(const double tStart, const double tEnd,
     const Eigen::VectorXd pStart, const Eigen::VectorXd pEnd) :
                                    m_pStart{pStart}, m_pEnd{pEnd},
@@ -15,6 +19,17 @@ SmoothTrajectory::SmoothTrajectory(const double tStart, const double tEnd,
 
 SmoothTrajectory::~SmoothTrajectory()
 {
+}
+
+void SmoothTrajectory::createTrajectory(const double tStart, const double tEnd, const Eigen::VectorXd& pStart, const Eigen::VectorXd& pEnd)
+{
+    m_tStart = tStart;
+    m_tEnd = tEnd;
+    m_pStart = pStart;
+    m_pEnd = pEnd;
+
+    // Calculate the smooting polynomial coefficients
+    cubicSmoothingPolynomial();
 }
 
 Eigen::VectorXd SmoothTrajectory::jointTrajectoryPos(const double t)
