@@ -7,9 +7,13 @@
 class SmoothTrajectory
 {
 public:
+    SmoothTrajectory();
     SmoothTrajectory(const double tStart, const double tEnd,
                      const Eigen::VectorXd pStart, const Eigen::VectorXd pEnd);
     ~SmoothTrajectory();
+
+    void createTrajectory(const double tStart, const double tEnd,
+        const Eigen::VectorXd& pStart, const Eigen::VectorXd& pEnd);
 
     /**
      * Calculate the position value on the trajectory for a given time
